@@ -91,7 +91,7 @@ def plot_image(image: np.ndarray, title: str = "", cmap: str | None = 'gray',
 
 def plot_random_images(image_dataset: np.ndarray, class_dataset: np.ndarray | None = None, 
                         cmap: str | None = 'gray', figsize: tuple[int, int] = (10, 10)):
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=figsize)
 
     index = np.random.randint(0, image_dataset.shape[0])
     image = image_dataset[index]
