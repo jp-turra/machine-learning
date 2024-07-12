@@ -1,3 +1,9 @@
+# Python Folders
 env/
 __pycache__/
+
+# Test folder
 playground/
+
+# VS Code personal settings folder
+.vscode/
