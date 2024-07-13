@@ -15,7 +15,7 @@ def salvar_modelo(modelo: Model, path: os.PathLike):
         modelo.name = nome_modelo
     
     modelo_json = modelo.to_json()
-    with open(os.path.join(path, f"{nome_modelo}.model.json"), 'w') as json:
+    with open(os.path.join(path, f"{nome_modelo}.model.json"), 'wt') as json:
         json.write(modelo_json)
     
     modelo.save_weights(
