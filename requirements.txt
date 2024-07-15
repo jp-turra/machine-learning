@@ -6,3 +6,4 @@ scikit-learn
 tensorflow
 keras
 h5py
+opencv-python
