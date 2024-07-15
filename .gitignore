@@ -5,5 +5,9 @@ __pycache__/
 # Test folder
 playground/
 
+# Images Folder
+datasets/faces
+datasets/cat_dog_2
+
 # VS Code personal settings folder
 .vscode/
