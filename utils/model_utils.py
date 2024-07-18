@@ -7,7 +7,8 @@ import numpy as np
 
 import cv2
 
-from keras.api.models import Model, model_from_json
+from keras.api.models import Model, model_from_json, Sequential
+from keras.api.layers import Resizing, Rescaling, RandomFlip, RandomRotation
 from keras.api.callbacks import History
 
 from cv2.typing import MatLike
@@ -113,3 +114,23 @@ def display_image(window_name: str, image: MatLike):
 
 def change_image_color(image: MatLike, color: int = cv2.COLOR_BGR2GRAY):
     return cv2.cvtColor(image, color)
+
+def resize_rescale_image(images, height: int, width: int, dtype: np.dtype = np.float32, scale_factor: float = 1./255):
+    resize_rescale = Sequential([
+        Resizing(height=height, width=width, dtype=dtype),
+        Rescaling(scale_factor)
+    ])
+
+    return resize_rescale(images)
+
+def augment_data(image, number_of_augmentations: int, flip_direction: str = 'horizontal_and_vertical', rotation_factor: float = 0.2):
+    data_augmentation = Sequential([
+        RandomFlip(flip_direction),
+        RandomRotation(rotation_factor),
+    ])
+    images = []
+    for i in range(number_of_augmentations):
+        augmented_image = data_augmentation(image)
+        images.append(augmented_image)
+
+    return images
