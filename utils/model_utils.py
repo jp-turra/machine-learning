@@ -5,8 +5,12 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
+import cv2
+
 from keras.api.models import Model, model_from_json
 from keras.api.callbacks import History
+
+from cv2.typing import MatLike
 
 def salvar_modelo(modelo: Model, path: os.PathLike):
     nome_modelo = modelo.name
@@ -102,3 +106,10 @@ def plot_random_images(image_dataset: np.ndarray, class_dataset: np.ndarray | No
     plt.imshow(image, cmap=cmap)
     plt.show()
 
+def display_image(window_name: str, image: MatLike):
+    cv2.imshow(window_name, image)
+    cv2.waitKey(0)
+    cv2.destroyWindow(window_name)
+
+def change_image_color(image: MatLike, color: int = cv2.COLOR_BGR2GRAY):
+    return cv2.cvtColor(image, color)

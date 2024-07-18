@@ -10,3 +10,4 @@ h5py
 opencv-contrib-python
 dlib
 seaborn
+pydot
