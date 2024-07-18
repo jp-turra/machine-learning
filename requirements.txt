@@ -1,9 +1,10 @@
 jupyter
+ipykernel
 matplotlib
 numpy
 pandas
 scikit-learn
-tensorflow
+tensorflow[and-cuda]
 keras
 h5py
 opencv-contrib-python

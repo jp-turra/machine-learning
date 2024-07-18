@@ -10,7 +10,12 @@ O objetivo desse repositório e revisar conceitos de aprendizado de máquina apl
 
 2. Ative o ambiente virtual
 
-`./env/Scripts/activate`
+    2.1 Windows
+    
+    `./env/Scripts/activate`
+
+    2.2 Linux
+    `source ./env/bin/activate`
 
 3. Instale as dependencias
 
