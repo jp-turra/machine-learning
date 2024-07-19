@@ -8,6 +8,7 @@ playground/
 # Images Folder
 datasets/faces
 datasets/cat_dog
+datasets/simpsons_2
 
 # VS Code personal settings folder
 .vscode/

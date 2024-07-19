@@ -20,8 +20,8 @@ import cv2
 import time
 import os
 
-USE_WEBCAM = 0
-USE_CSRT = 0
+USE_WEBCAM = 1
+USE_CSRT = 1
 
 if USE_WEBCAM:
     video_capture = cv2.VideoCapture(0)

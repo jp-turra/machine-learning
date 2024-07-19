@@ -8,7 +8,8 @@ import numpy as np
 import cv2
 
 from keras.api.models import Model, model_from_json, Sequential
-from keras.api.layers import Resizing, Rescaling, RandomFlip, RandomRotation
+from keras.api.layers import Resizing, Rescaling, Reshape
+from keras.api.layers import RandomFlip, RandomRotation, RandomBrightness, RandomContrast, RandomCrop, RandomTranslation, RandomZoom
 from keras.api.callbacks import History
 
 from cv2.typing import MatLike
