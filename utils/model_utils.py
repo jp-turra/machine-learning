@@ -12,6 +12,8 @@ from keras.api.layers import Resizing, Rescaling, Reshape
 from keras.api.layers import RandomFlip, RandomRotation, RandomBrightness, RandomContrast, RandomCrop, RandomTranslation, RandomZoom
 from keras.api.callbacks import History
 
+from tensorflow._api.v2.data import Dataset
+
 from cv2.typing import MatLike
 
 def salvar_modelo(modelo: Model, path: os.PathLike):
@@ -135,3 +137,31 @@ def augment_data(image, number_of_augmentations: int, flip_direction: str = 'hor
         images.append(augmented_image)
 
     return images
+
+def load_image_from_directory(dir_path: os.PathLike, class_names: list, image_shape=(224, 224)):
+    if not os.path.exists(dir_path):
+        return [], []
+    
+    imagens = []
+    labels = []
+
+    for item in os.listdir(dir_path):
+        if item in class_names and os.path.isdir(os.path.join(dir_path, item)):
+            for file in os.listdir(os.path.join(dir_path, item)):
+                image_path = os.path.join(dir_path, item, file)
+                if os.path.isfile(image_path):
+                    try:
+                        image = cv2.imread(image_path)
+                        if image is not None:         
+                            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                            if image_shape:
+                                image = cv2.resize(image, image_shape)
+
+                            imagens.append(image)
+                            labels.append(item)
+                    except:
+                        pass
+    try:
+        return np.array(imagens), np.array(labels)
+    except:
+        return imagens, np.array(labels)
