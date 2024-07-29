@@ -12,3 +12,4 @@ dlib
 seaborn
 pydot
 scikeras
+xgboost
