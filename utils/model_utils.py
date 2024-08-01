@@ -20,6 +20,8 @@ from itertools import product
 
 from cv2.typing import MatLike
 
+from numba import cuda
+
 def salvar_modelo(modelo: Model, path: os.PathLike):
     nome_modelo = modelo.name
     if not nome_modelo:
@@ -235,3 +237,8 @@ def show_kernel(kernel, label=True, digits=None, text_size=28):
                      horizontalalignment='center', verticalalignment='center')
     plt.xticks([])
     plt.yticks([])
+
+def clear_gpu_memory():
+    device = cuda.get_current_device()
+    if device:
+        device.reset()
