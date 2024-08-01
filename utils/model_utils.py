@@ -7,12 +7,16 @@ import numpy as np
 
 import cv2
 
-from keras.api.models import Model, model_from_json, Sequential
+from keras.api.callbacks import History
 from keras.api.layers import Resizing, Rescaling, Reshape
 from keras.api.layers import RandomFlip, RandomRotation, RandomBrightness, RandomContrast, RandomCrop, RandomTranslation, RandomZoom
-from keras.api.callbacks import History
+from keras.api.models import Model, model_from_json, Sequential
+from keras.api.preprocessing import image_dataset_from_directory
 
-from tensorflow._api.v2.data import Dataset
+from tensorflow._api.v2.image import convert_image_dtype
+from tensorflow._api.v2.data.experimental import AUTOTUNE
+
+from itertools import product
 
 from cv2.typing import MatLike
 
@@ -38,15 +42,15 @@ def carregar_modelo(dir_path: os.PathLike, nome_modelo: str):
 
     return modelo
 
-def print_history(history: History):
+def print_history(history: History, accuracy_name='accuracy', loss_name='loss'):
     if not history or not history.history:
         return
     
-    if history.history.get('accuracy'):
-        print("Precisão de treinamento: ", np.mean(history.history['accuracy']) * 100, "%")
+    if history.history.get(f'{accuracy_name}'):
+        print("Precisão de treinamento: ", np.mean(history.history[f'{accuracy_name}']) * 100, "%")
 
-    if history.history.get('val_accuracy'):
-        print("Precisão de teste: ", np.mean(history.history['val_accuracy']) * 100, "%")
+    if history.history.get(f'val_{accuracy_name}'):
+        print("Precisão de teste: ", np.mean(history.history[f'val_{accuracy_name}']) * 100, "%")
 
     if history.history.get('loss'):
         print("Perda de treinamento: ", np.mean(history.history['loss']))
@@ -87,6 +91,29 @@ def plot_history(history: History):
         ax1.legend()
         ax2.legend()
         plt.show()
+
+def plot_learning_curve(acc: list, val_acc: list, loss: list, val_loss: list, epochs: list = None, index_range: tuple[int, int] = (0, -1)):
+    if not epochs:
+        epochs = np.arange(0, len(acc), 1)
+
+    fig, (ax1, ax2) = plt.subplots(
+        figsize=(9, 5),
+        nrows=1,
+        ncols=2
+    )
+
+    first_index = index_range[0]
+    last_index = index_range[1]
+
+    ax1.plot(epochs[first_index:last_index], acc[first_index:last_index], 'ro-', label="Train Accuracy")
+    ax1.plot(epochs[first_index:last_index], val_acc[first_index:last_index], 'go-', label="Test Accuracy")
+    ax1.legend()
+
+    ax2.plot(epochs[first_index:last_index], loss[first_index:last_index], 'ro-', label="Train Loss")
+    ax2.plot(epochs[first_index:last_index], val_loss[first_index:last_index], 'go-', label="Test Loss")
+    ax2.legend()
+
+    plt.show()
 
 def plot_image(image: np.ndarray, title: str = "", cmap: str | None = 'gray',
                 figsize: tuple[int, int] = (10, 10)):
@@ -138,6 +165,27 @@ def augment_data(image, number_of_augmentations: int, flip_direction: str = 'hor
 
     return images
 
+def convert_image_to_float(image, label, dtype='float32'):
+    image = convert_image_dtype(image, dtype=dtype)
+    return image, label
+
+def load_tf_images_from_directory(dir_path: os.PathLike, image_shape=(224, 224), labels: list | str = "inferred", 
+                               label_mode: str = 'binary', shuffle: bool = True, batch_size: int = 32, 
+                               interpolation: str = 'bilinear'):
+    ds = image_dataset_from_directory(
+        directory=dir_path,
+        labels=labels,
+        label_mode=label_mode,
+        image_size=image_shape,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        interpolation=interpolation
+    )
+
+    ds = (ds.map(convert_image_to_float).cache().prefetch(buffer_size=AUTOTUNE))
+
+    return ds
+
 def load_image_from_directory(dir_path: os.PathLike, class_names: list, image_shape=(224, 224)):
     if not os.path.exists(dir_path):
         return [], []
@@ -165,3 +213,25 @@ def load_image_from_directory(dir_path: os.PathLike, class_names: list, image_sh
         return np.array(imagens), np.array(labels)
     except:
         return imagens, np.array(labels)
+    
+def show_kernel(kernel, label=True, digits=None, text_size=28):
+    # Format kernel
+    kernel = np.array(kernel)
+    if digits is not None:
+        kernel = kernel.round(digits)
+
+    # Plot kernel
+    cmap = plt.get_cmap('Blues_r')
+    plt.imshow(kernel, cmap=cmap)
+    rows, cols = kernel.shape
+    thresh = (kernel.max()+kernel.min())/2
+    # Optionally, add value labels
+    if label:
+        for i, j in product(range(rows), range(cols)):
+            val = kernel[i, j]
+            color = cmap(0) if val > thresh else cmap(255)
+            plt.text(j, i, val, 
+                     color=color, size=text_size,
+                     horizontalalignment='center', verticalalignment='center')
+    plt.xticks([])
+    plt.yticks([])

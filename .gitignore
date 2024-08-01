@@ -12,5 +12,8 @@ datasets/cat_dog_2
 datasets/simpsons/images
 datasets/simpsons_2
 
+# Online datasets
+datasets/anemia/data.csv
+
 # VS Code personal settings folder
 .vscode/
