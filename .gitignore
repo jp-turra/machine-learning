@@ -11,6 +11,7 @@ datasets/cat_dog
 datasets/cat_dog_2
 datasets/simpsons/images
 datasets/simpsons_2
+datasets/2d_mnist
 
 # Online datasets
 datasets/anemia/data.csv
