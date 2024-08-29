@@ -1,6 +1,7 @@
-# Python Folders
+# Python Folders/Files
 env/
 __pycache__/
+**/__init__.py
 
 # Test folder
 playground/
@@ -13,9 +14,12 @@ datasets/simpsons/images
 datasets/simpsons_2
 datasets/2d_mnist
 datasets/3d_mnist
+datasets/modelnet10
 
 # Online datasets
 datasets/anemia/data.csv
 
 # VS Code personal settings folder
 .vscode/
+
+yolov*
